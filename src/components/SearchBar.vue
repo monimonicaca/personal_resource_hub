@@ -19,10 +19,29 @@ const props = defineProps<{
 const emit = defineEmits<{
   (event: 'update:modelValue', value: string): void
 }>()
-
+const debounce=function(fn,delay){
+  let timer=null
+  const newFn=function(...args){
+    const context=this
+    let res;
+    if(timer){
+      clearTimeout(timer)
+      timer=null
+    }
+    timer=setTimeout(()=>{
+      res=fn.apply(context,args)
+    },delay)
+  }
+  return newFn
+}
+const changeTarget=function(target){
+  emit('update:modelValue', target)
+  //console.log(target)
+}
+const changeTargetDebounce=debounce(changeTarget,300)
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement
   // TODO: Implementing search filtering logic requires considering performance.
-  emit('update:modelValue', target.value)
+  changeTargetDebounce(target.value)
 }
 </script>
