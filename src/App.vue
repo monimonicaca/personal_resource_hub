@@ -63,12 +63,11 @@ const categories = computed(() => {
   return ['All', ...Array.from(base)]
 })
 
-const currentCategory = activeCategory.value
 const filteredResources = computed(() => {
-  if (currentCategory === 'All') {
+  if (activeCategory.value === 'All') {
     return resources.value
   }
-  return resources.value.filter((item) => item.tags.includes(currentCategory))
+  return resources.value.filter((item) => item.tags.includes(activeCategory.value))
 })
 
 const handleCategorySelect = (category: string) => {
@@ -77,6 +76,7 @@ const handleCategorySelect = (category: string) => {
 }
 
 watchEffect(() => {
+  console.log(activeCategory.value)
   if (!categories.value.includes(activeCategory.value)) {
     activeCategory.value = 'All'
   }
