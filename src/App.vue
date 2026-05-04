@@ -30,7 +30,12 @@
         </div>
 
         <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          <ResourceCard v-for="item in filteredResources" :key="item.id" :item="item" />
+          <template v-if="filteredResources.length">
+            <ResourceCard v-for="item in filteredResources" :key="item.id" :item="item" />
+          </template>
+          <template v-else> 
+            <div class="col-span-full flex items-center justify-center py-16 text-center text-dusk/50">No resources found.</div>
+          </template>
         </div>
       </main>
     </div>
