@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect, watch } from 'vue'
 import SearchBar from './components/SearchBar.vue'
 import Sidebar from './components/Sidebar.vue'
 import ResourceCard from './components/ResourceCard.vue'
@@ -79,6 +79,9 @@ watchEffect(() => {
   if (!categories.value.includes(activeCategory.value)) {
     activeCategory.value = 'All'
   }
+})
+
+watch(()=>query.value,(newVal,oldVal)=>{
   
 })
 </script>
