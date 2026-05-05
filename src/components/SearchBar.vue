@@ -19,9 +19,9 @@ const props = defineProps<{
 const emit = defineEmits<{
   (event: 'update:modelValue', value: string): void
 }>()
-const debounce=function(fn,delay){
-  let timer=null
-  const newFn=function(...args){
+const debounce=function(fn:Function,delay:number){
+  let timer:number|null=null;
+  const newFn=function(...args:any[]){
     const context=this
     let res;
     if(timer){
@@ -34,7 +34,7 @@ const debounce=function(fn,delay){
   }
   return newFn
 }
-const changeTarget=function(target){
+const changeTarget=function(target:string){
   emit('update:modelValue', target)
   //console.log(target)
 }

@@ -33,7 +33,7 @@
           <template v-if="filteredResources.length">
             <ResourceCard v-for="item in filteredResources" :key="item.id" :item="item" />
           </template>
-          <template v-else> 
+          <template v-else>
             <div class="col-span-full flex items-center justify-center py-16 text-center text-dusk/50">No resources found.</div>
           </template>
         </div>
@@ -62,17 +62,24 @@ const categories = computed(() => {
   resources.value.forEach((item) => item.tags.forEach((tag) => base.add(tag)))
   return ['All', ...Array.from(base)]
 })
-const currentCategory = computed(() => activeCategory.value)
+
+const isFilterByTitle = ref(false)
+
 const filteredResources = computed(() => {
-  if (currentCategory.value === 'All') {
+  if (isFilterByTitle.value && query.value) {
+    const regex = new RegExp(query.value, 'i')
+    return resources.value.filter(item => regex.test(item.title))
+  }
+  if (activeCategory.value === 'All') {
     return resources.value
   }
-  return resources.value.filter((item) => item.tags.includes(currentCategory.value))
+  return resources.value.filter((item) => item.tags.includes(activeCategory.value))
 })
 
 const handleCategorySelect = (category: string) => {
   activeCategory.value = category
   persistedCategory.value = category
+  isFilterByTitle.value = false
 }
 
 watchEffect(() => {
@@ -81,7 +88,19 @@ watchEffect(() => {
   }
 })
 
-watch(()=>query.value,(newVal,oldVal)=>{
-  
+const search = function(qurey: string) {
+  if (categories.value.includes(qurey)) {
+    activeCategory.value = qurey
+    isFilterByTitle.value = false
+  } else {
+    activeCategory.value = 'All'
+    isFilterByTitle.value = true
+  }
+}
+
+watch(() => query.value, (newVal, oldVal) => {
+  if (newVal !== '' && newVal !== oldVal) {
+    search(newVal)
+  }
 })
 </script>
