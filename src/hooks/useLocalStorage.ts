@@ -32,7 +32,12 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
 
   function safeSetItem(value: T) {
     try {
+      const seen = new WeakSet()
       const serialized = JSON.stringify(value, (k, v) => {
+        if (v && typeof v === 'object') {
+          if (seen.has(v)) return undefined
+          seen.add(v)
+        }
         if (typeof v === 'function') {
           return { __type: 'Function', code: v.toString() }
         }

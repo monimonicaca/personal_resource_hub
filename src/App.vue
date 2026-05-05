@@ -91,6 +91,7 @@ watchEffect(() => {
 const search = function(qurey: string) {
   if (categories.value.includes(qurey)) {
     activeCategory.value = qurey
+    persistedCategory.value = qurey
     isFilterByTitle.value = false
   } else {
     activeCategory.value = 'All'
