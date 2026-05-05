@@ -12,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import { debounce } from 'lodash-es'
+
 const props = defineProps<{
   modelValue: string
 }>()
@@ -19,29 +21,13 @@ const props = defineProps<{
 const emit = defineEmits<{
   (event: 'update:modelValue', value: string): void
 }>()
-const debounce=function(fn:Function,delay:number){
-  let timer:number|null=null;
-  const newFn=function(...args:any[]){
-    const context=this
-    let res;
-    if(timer){
-      clearTimeout(timer)
-      timer=null
-    }
-    timer=setTimeout(()=>{
-      res=fn.apply(context,args)
-    },delay)
-  }
-  return newFn
-}
-const changeTarget=function(target:string){
+
+const changeTargetDebounce = debounce((target: string) => {
   emit('update:modelValue', target)
-  //console.log(target)
-}
-const changeTargetDebounce=debounce(changeTarget,300)
+}, 300)
+
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement
-  // TODO: Implementing search filtering logic requires considering performance.
   changeTargetDebounce(target.value)
 }
 </script>
